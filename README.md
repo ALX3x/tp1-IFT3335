@@ -1,4 +1,4 @@
-Membre	Travail	Points
+
 Membre 1	BFS + DFS	
 Membre 2	UCS + heuristique Euclidienne + heuristique Manhattan
 Membre 3	A*	
