@@ -81,6 +81,39 @@ def bfs(adj: Adjacency, start: int, goal: int) -> SearchResult:
     n_explored = 0                   # Compteur pour compter le nombre de noeuds développés. Il doit être incrémenté à chaque fois qu'un noeud est développé.  
 
     # TODO : Compléter le code ici
+    
+    # file FIFO contenant les noeuds à explorer
+    queue = deque([start])
+    
+    # ensemble des noeuds deja decouverts
+    visited = {start}
+
+    while queue:
+
+        # retirer le premier noeud de la file
+        current = queue.popleft()
+
+        # Le noeud est maintenant développé+ combien developper
+        expanded.append(current)
+        n_explored += 1
+
+        # verifier si on a atteint le but si oui tracer le chemin
+        if current == goal:
+            chemin = reconstruct_path(came_from, start, goal)
+            cout = path_cost(adj, chemin)
+            return SearchResult(chemin, cout, expanded, n_explored)
+
+        # explorer les voisins
+        for voisin, poids in adj[current]:
+            # eviter les loop
+            if voisin not in visited:
+                visited.add(voisin)
+
+                # on se rappelle par quel noeud on est arriver ici
+                came_from[voisin] = current
+
+                # ajouter le voisin a la fin de la file
+                queue.append(voisin)
 
     return SearchResult(None, math.inf, expanded, n_explored) # N'effacez pas cette ligne
 
@@ -99,6 +132,35 @@ def dfs(adj: Adjacency, start: int, goal: int) -> SearchResult:
     n_explored = 0
 
     # TODO : Compléter le code ici
+    
+    # pile LIFO
+    stack = [start]
+
+    # noeuds deja découverts
+    visited = {start}
+
+    while stack:
+
+        # retirer le dernier noeud ajouter
+        current = stack.pop()
+
+        # développer le noeud
+        expanded.append(current)
+        n_explored += 1
+
+        # verifier si le but est atteint
+        if current == goal:
+            chemin = reconstruct_path(came_from, start, goal)
+            cout = path_cost(adj, chemin)
+            return SearchResult(chemin, cout, expanded, n_explored)
+
+        # ajouter les voisins dans la pile
+        for voisin, poids in reversed(adj[current]):
+            # eviter les loop
+            if voisin not in visited:
+                visited.add(voisin)
+                came_from[voisin] = current
+                stack.append(voisin)
 
     return SearchResult(None, math.inf, expanded, n_explored) # N'effacez pas cette ligne
 
